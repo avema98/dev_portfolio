@@ -1,20 +1,20 @@
 <template>
-  <div id="app" >
+  <div id="app">
 
     <div id="desktopNavbar" style="width: 100px; text-align: center; padding: 10px; font-size:smaller;">
-      <div class="desktopLink" @:click="openWindow('main')">
+      <div class="desktopLink" @click="() => openWindow('main')">
         <img src="@/assets/img/site/mz-desktop-icon.png">
         <p>
           <span>Home</span>
         </p>
       </div>
-      <div class="desktopLink" @:click="openWindow('experience')">
+      <div class="desktopLink" @click="() => openWindow('experience')">
         <img src="@/assets/img/site/mz-desktop-icon.png">
         <p>
           <span>About</span>
         </p>
       </div>
-      <div class="desktopLink" @:click="openWindow('projects')">
+      <div class="desktopLink" @click="() => openWindow('projects')">
         <img src="@/assets/img/site/mz-desktop-icon.png">
         <p>
           <span>Projects</span>
@@ -35,15 +35,21 @@
     </div>
     <div id="windowWrapper">
       <!-- main window -->
-      <div class="windowBox" v-show="windowsOpen.main" :style="windowsClassStyle.main">
-        <div class="windowTitleBar">
-          <div class="windowTitleBarText">Home</div>
+      <div class="windowBox" id="mainWindowBox" v-if="windowsOpen.main" 
+      @mouseDown="handleMainWindowMouseDown"
+      :style="windowsClassStyle.main">
+        <div class="windowTitleBar"
+        @mousedown="handleMainTitleBarMouseDown"
+        >
+          <div class="windowTitleBarText"
+          @mousedown="handleMainTitleBarMouseDown"
+          >Home</div>
           <div class="windowTitleBarControls">
-            <button @:click="toggleContent('main')">
+            <button @click="() => toggleContent('main')">
               <div v-if="windowsContent.main">_</div>
               <div v-else>+</div>
             </button>
-            <button @:click="closeWindow('main')">X</button>
+            <button @click="() => closeWindow('main')">X</button>
           </div>
         </div>
         <div v-show="windowsContent.main" class="section-content" style="width:60vw;">
@@ -51,21 +57,24 @@
           <iframe src="views/home.html" name="iframe_main" title="Main Window IFrame"></iframe>
         </div>
       </div>
-
+      
+      
       <!-- experience window -->
-      <div class="windowBox" v-show="windowsOpen.experience" style="left:22vw; top:12vh;">
+      <!-- style="left:22vw; top:12vh;" -->
+      <div class="windowBox" v-show="windowsOpen.experience"
+      :style="windowsClassStyle.experience" >
         <div class="windowTitleBar">
           <div class="windowTitleBarText">About</div>
           <div class="windowTitleBarControls">
-            <button @:click="toggleContent('experience')">
+            <button @click="() => toggleContent('experience')">
               <div v-if="windowsContent.experience">_</div>
               <div v-else>+</div>
             </button>
-            <button @:click="closeWindow('experience')">X</button>
+            <button @click="() => closeWindow('experience')">X</button>
           </div>
         </div>
         <!-- navbar -->
-        <!-- <nav v-show="windowsContent.experience" class="navbar">
+        <nav v-show="windowsContent.experience" class="navbar">
           <ul>
             <li><a href="views/about-me.html" target="iframe_experience">Me</a></li>
             <li><a href="about.html" target="iframe_experience">Skills</a></li>
@@ -75,24 +84,26 @@
         </nav>
         <div v-show="windowsContent.experience" class="section-content" style="width:60vw;">
           <iframe src="home.html" name="iframe_experience" title="Experience Window IFrame"></iframe>
-        </div> -->
+        </div>
       </div>
 
       <!-- projects window -->
-      <div class="windowBox" v-show="windowsOpen.projects" style="left:24vw; top:14vh;">
+      <!-- style="left:24vw; top:14vh;" -->
+      <div class="windowBox" v-show="windowsOpen.projects" :style="windowsClassStyle.projects" >
         <div class="windowTitleBar">
           <div class="windowTitleBarText">stuff i've made</div>
           <div class="windowTitleBarControls">
-            <button @:click="toggleContent('projects')">
+            <button @click="() => toggleContent('projects')">
               <div v-if="windowsContent.projects">_</div>
               <div v-else>+</div>
             </button>
-            <button @:click="closeWindow('projects')">X</button>
+            <button @click="() => closeWindow('projects')">X</button>
           </div>
         </div>
         <!-- navbar -->
         <nav v-show="windowsContent.projects" class="navbar">
           <ul>
+            
             <li><a href="home.html" target="iframe_projects">web dev</a></li>
             <li><a href="about.html" target="iframe_projects">game dev</a></li>
             <li><a href="games.html" target="iframe_projects">other</a></li>
@@ -104,26 +115,26 @@
           <iframe src="home.html" name="iframe_projects" title="Projects Window IFrame"></iframe>
         </div>
       </div>
-      
+
       <!-- warning popup window -->
-      <div class="windowBox" v-show="windowsOpen.warning">
+      <div class="windowBox" v-if="windowsOpen.warning" :style="windowsClassStyle.alert">
         <div class="windowTitleBar">
           <div class="windowTitleBarText">warning!</div>
           <div class="windowTitleBarControls">
-            <button @:click="closeWindow('warning')">X</button>
+            <button @click="() => closeWindow('warning')">X</button>
           </div>
         </div>
         <div class="section-content">
           <div style="display:flex; align-items: center; justify-content: space-between;">
-            <img src="@/assets/img/site/alert-icon.png"/>
+            <img src="@/assets/img/site/alert-icon.png" />
             <span>site under construction!</span>
           </div>
-          <button @:click="closeWindow('warning')">ok</button>
+          <button @click="() => closeWindow('warning')">ok</button>
         </div>
-        
-      
+
+
       </div>
-  
+
     </div>
   </div>
 </template>
@@ -134,7 +145,8 @@
 // import HelloWorld from './components/HelloWorld.vue'
 import { ref, reactive } from 'vue'
 import { onMounted } from 'vue'
-import {onBeforeUnmount} from 'vue'
+import { onBeforeUnmount } from 'vue'
+
 
 const windowsOpen = reactive({
   test: true,
@@ -154,40 +166,163 @@ const windowsContent = reactive({
 })
 
 
-const windowsClassStyle= reactive({
-  test: {},
-  main: {},
-  experience: {},
-  projects: {}
+const windowsClassStyle = reactive({
+  test: {
+    left: '20vw',
+    top:'10vh',
+  },
+  main: {
+    left: '20vw',
+    top:'10vh',
+    zIndex: 10,
+    },
+  experience: {
+    left: '22vw',
+    top:'12vh',
+    zIndex: 20,
+
+  },
+  projects: {
+    left: '24vw',
+    top:'14vh',
+    zIndex: 30,
+  },
+  alert:{
+    left: '45vw',
+    top:'45vh',
+    zIndex: 1000,
+  }
 })
 
-const num = ref(0)
 
+const windowPositions = reactive({
+  main: {
+    startX: 0,
+    startY: 0,
+    newX: 0,
+    newY: 0,
+    maxZ: 0
+  },
+  experience: {
+    startX: 0,
+    startY: 0,
+    newX: 0,
+    newY: 0,
+    maxZ: 0
+  },
+})
+const zIndexes = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+
+const num = ref(0)
+const currentWindow = ref(null)
+const windows = ref([])
+const openCounter = ref(0)
 function alertme() {
   num.value++
 }
 
 
-function openWindow(id)  {
+function openWindow(id) {
+  windowsClassStyle[id].zIndex = windows.value.length * 10
+  openCounter.value++
+  if (windows.value.length == 0){
+    windowsClassStyle[id].left = '20vw'
+    windowsClassStyle[id].top = '10vh'
+    windowsClassStyle[id].zIndex = 10
+  }else{
+    const windowPosIndex = openCounter.value % 3
+    windowsClassStyle[id].zIndex = windows.value.length * 10
+     windowsClassStyle[id].left = `${20 + (windowPosIndex)*3}vw`
+      windowsClassStyle[id].top = `${10 + (windowPosIndex) *3}vh`
+  }
+  windows.value.push(id)
   windowsOpen[id] = true
 }
 
-
-function closeWindow(id, windowsOpen) {
+function closeWindow(id) {
+  windows.value = windows.value.filter(window => window !== id)
+  const windowNames = ["main", "experience", "projects"]
+  
+  windowNames.forEach((window, index) => {
+    if (window != id) {
+      windowsClassStyle[window].zIndex = index * 10
+    }else{
+      windowsClassStyle[window].zIndex = -1
+    }
+  })
+  
   windowsOpen[id] = false;
 }
 
-function showContent(id, windowsContent) {
+function showContent(id) {
   windowsContent[id] = true;
 }
 
-function hideContent(id, windowsContent) {
+function hideContent(id) {
   windowsContent[id] = false;
 }
 
-function toggleContent(id, windowsContent) {
+function toggleContent(id) {
   windowsContent[id] = !windowsContent[id];
 }
+
+const mousemoveMainEventListener = (e)=> {
+    const mainWindow = document.getElementById('mainWindowBox')
+    windowPositions.main.newX =  e.clientX - windowPositions.main.startX
+    windowPositions.main.newY = e.clientY - windowPositions.main.startY
+    
+    windowsClassStyle.main.top =  `${(mainWindow.offsetTop - windowPositions.main.newY)}px`
+    windowsClassStyle.main.left = `${-(mainWindow.offsetLeft - windowPositions.main.newX)}px`
+    console.log('mousemove', windowPositions.main, windowPositions.main)
+  }
+  
+
+const mainMouseUpEventListener = (e) => {
+  currentWindow.value = null
+  window.removeEventListener('mousemove', mousemoveMainEventListener)
+}
+// EVENT HANDLERS
+function handleMainTitleBarMouseDown(e) {
+  e.preventDefault();
+  console.log('mouse down')
+  if(currentWindow.value || e.button !=0) return
+  
+  currentWindow.value = 'main'
+  
+  windowPositions.main.startX = e.clientX
+  windowPositions.main.startY = e.clientY
+  
+  window.addEventListener('mousemove', mousemoveMainEventListener)
+  
+  window.addEventListener('mouseup', (e) => {
+    currentWindow.value = null
+    document.removeEventListener('mousemove', mousemoveMainEventListener)
+  })
+  
+}
+
+function handleExperienceTitleBarMouseDown(e) {
+  e.preventDefault();
+  console.log('mouse down')
+}
+
+
+function handleExperienceWindowMouseDown(e) {
+  e.preventDefault();
+  console.log('mouse down')
+}
+
+
+function handleMainWindowMouseDown(e) {
+  e.preventDefault();
+  console.log('mouse down')
+}
+
+
+function resizeZIndices() {
+}
+
+
 </script>
 
 
@@ -195,12 +330,12 @@ function toggleContent(id, windowsContent) {
 
 <!-- STYLE -->
 <style>
-@font-face{
+@font-face {
   font-family: Dogica;
   src: url('@/assets/fonts/dogica.ttf');
 }
 
-@font-face{
+@font-face {
   font-family: Dogica;
   src: url('@/assets/fonts/dogicabold.ttf');
   font-weight: bold;
@@ -212,11 +347,11 @@ function toggleContent(id, windowsContent) {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  background:  url('@/assets/img/bg/glitch1.png');
+  background: url('@/assets/img/bg/glitch1.png');
   --text: #FFFFFF;
   --bg: #101020;
   --link: #A0D0FF;
-  
+
   --header-image: url('@/assets/img/bg/glitch1.png');
   --body-bg-image: url('@/assets/img/bg/glitch1.png');
   --box-bg-image: url('@/assets/img/bg/glitch2.png');
@@ -261,7 +396,7 @@ function toggleContent(id, windowsContent) {
   --text: #FFFFFF;
   --bg: #101020;
   --link: #A0D0FF;
-  
+
   --header-image: url('@/assets/img/bg/glitch1.png');
   --body-bg-image: url('@/assets/img/bg/glitch1.png');
   --box-bg-image: url('@/assets/img/bg/glitch2.png');
@@ -269,19 +404,19 @@ function toggleContent(id, windowsContent) {
 }
 
 /* fonts */
-@font-face{
+@font-face {
   font-family: Dogica;
   src: url('@/assets/fonts/dogica.ttf');
 }
 
-@font-face{
+@font-face {
   font-family: Dogica;
   src: url('@/assets/fonts/dogicabold.ttf');
   font-weight: bold;
 }
 
 * {
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 body {
@@ -299,9 +434,9 @@ body {
 }
 
 iframe {
-  height:500px; 
-  width:100%;
-  border:none;
+  height: 500px;
+  width: 100%;
+  border: none;
 }
 
 #container {
@@ -311,11 +446,12 @@ iframe {
   border: 3px solid var(--text);
 }
 
-#container a{
+#container a {
   color: var(--link);
 }
+
 #headerArea {
-  background-color: var(--bg);  
+  background-color: var(--bg);
 }
 
 #header {
@@ -332,7 +468,7 @@ iframe {
   color: var(--text);
   background-color: var(--bg);
   width: 100%;
-  margin: 0px; 
+  margin: 0px;
 }
 
 .navbar ul {
@@ -361,7 +497,7 @@ iframe {
 }
 
 .navbar li::first-letter {
-  text-decoration: underline; 
+  text-decoration: underline;
 }
 
 /* navigation link when a link is hovered over */
@@ -376,7 +512,7 @@ iframe {
 }
 
 #flex li {
-  margin: 5px;  
+  margin: 5px;
 }
 
 aside {
@@ -408,7 +544,7 @@ footer {
 }
 
 ul {
-  padding-inline-start: 10px; 
+  padding-inline-start: 10px;
 }
 
 h1,
@@ -422,7 +558,7 @@ h1 {
 }
 
 a {
-  color: var(--link); 
+  color: var(--link);
 }
 
 .box {
@@ -468,7 +604,7 @@ a {
   align-items: center;
 }
 
-.windowTitleBar:hover{
+.windowTitleBar:hover {
   cursor: move;
 }
 
@@ -482,7 +618,7 @@ a {
   border: 2px solid var(--link);
 }
 
-.windowTitleBar button:hover{
+.windowTitleBar button:hover {
   background-color: var(--bg);
   color: var(--link);
   border: 2px solid var(--bg);
@@ -503,7 +639,7 @@ a {
   padding: 5px;
 }
 
-.desktopLink:hover{
+.desktopLink:hover {
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.25);
   border-radius: 5px;
@@ -526,29 +662,25 @@ a {
   #flex {
     flex-wrap: wrap;
   }
-  
+
   aside {
     width: 100%;
   }
-  
+
   main {
     order: 1;
   }
-  
+
   #leftSideBar {
-    order: 2; 
+    order: 2;
   }
-  
+
   #rightSideBar {
     order: 3;
   }
-  
+
   .navbar ul {
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
   }
 }
-
-
-
-
 </style>
