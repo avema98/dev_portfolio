@@ -37,7 +37,7 @@
     
     <div id="windowWrapper">
       <!-- main window -->
-      <div class="windowBox" v-show="windowsOpen.main" style="left:20vw; top:10vh;">
+      <div class="windowBox" v-show="windowsOpen.main" :style="windowsClassStyle.main">
         <div class="windowTitleBar">
           <div class="windowTitleBarText">Home</div>
           <div class="windowTitleBarControls">
@@ -70,7 +70,7 @@
           </div>
         </div>
         <!-- navbar -->
-        <nav v-show="windowsContent.experience" class="navbar">
+        <!-- <nav v-show="windowsContent.experience" class="navbar">
           <ul>
             <li><a href="views/about-me.html" target="iframe_experience">Me</a></li>
             <li><a href="about.html" target="iframe_experience">Skills</a></li>
@@ -79,9 +79,8 @@
           </ul>
         </nav>
         <div v-show="windowsContent.experience" class="section-content" style="width:60vw;">
-          <!-- iframe! -->
           <iframe src="home.html" name="iframe_experience" title="Experience Window IFrame"></iframe>
-        </div>
+        </div> -->
       </div>
 
       <!-- projects window -->
@@ -110,7 +109,7 @@
           <iframe src="home.html" name="iframe_projects" title="Projects Window IFrame"></iframe>
         </div>
       </div>
-
+      
       <!-- warning popup window -->
       <div class="windowBox" v-show="windowsOpen.warning">
         <div class="windowTitleBar">
@@ -126,8 +125,10 @@
           </div>
           <button @:click="closeWindow('warning')">ok</button>
         </div>
+        
+      
       </div>
-
+  
     </div>
   </div>
 </template>
@@ -137,8 +138,10 @@
 
 // import HelloWorld from './components/HelloWorld.vue'
 import { ref, reactive } from 'vue'
+import { onMounted } from 'vue'
+import {onBeforeUnmount} from 'vue'
 
-const windowsOpen = ref({
+const windowsOpen = reactive({
   test: true,
   warning: true,
   main: false,
@@ -147,22 +150,49 @@ const windowsOpen = ref({
 })
 
 
-const windowsContent = ref({
+const windowsContent = reactive({
   test: true,
   main: true,
   experience: true,
   projects: true
 
 })
+
+
+const windowsClassStyle= reactive({
+  test: {},
+  main: {},
+  experience: {},
+  projects: {}
+})
+
+const num = ref(0)
+
 function alertme() {
   num.value++
 }
 
 
 function openWindow(id)  {
+  windowsOpen[id] = true
 }
-          
-const num = ref(0)
+
+
+function closeWindow(id, windowsOpen) {
+  windowsOpen[id] = false;
+}
+
+function showContent(id, windowsContent) {
+  windowsContent[id] = true;
+}
+
+function hideContent(id, windowsContent) {
+  windowsContent[id] = false;
+}
+
+function toggleContent(id, windowsContent) {
+  windowsContent[id] = !windowsContent[id];
+}
 </script>
 
 
