@@ -1,5 +1,4 @@
 <template>
-
   <div id="app" >
 
     <div id="desktopNavbar" style="width: 100px; text-align: center; padding: 10px; font-size:smaller;">
