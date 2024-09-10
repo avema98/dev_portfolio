@@ -34,7 +34,6 @@
         </p>
       </div>
     </div>
-    
     <div id="windowWrapper">
       <!-- main window -->
       <div class="windowBox" v-show="windowsOpen.main" :style="windowsClassStyle.main">
@@ -48,9 +47,6 @@
             <button @:click="closeWindow('main')">X</button>
           </div>
         </div>
-        
-        
-        
         <div v-show="windowsContent.main" class="section-content" style="width:60vw;">
           <!-- iframe! -->
           <iframe src="views/home.html" name="iframe_main" title="Main Window IFrame"></iframe>
